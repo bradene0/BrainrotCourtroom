@@ -13,6 +13,15 @@ local EvidenceService = {
 	incident = nil,
 }
 
+local function getStationName(stationId)
+	for _, station in ipairs(Content.ClueStations) do
+		if station.id == stationId then
+			return station.name
+		end
+	end
+	return "Prototype Map"
+end
+
 local function pickPlayer(players)
 	if #players == 0 then
 		return nil
@@ -67,8 +76,10 @@ function EvidenceService:Generate(roundId, incident, players, roleService)
 			type = template.type,
 			reliabilityClass = template.reliabilityClass,
 			sourceLocation = template.stationId,
+			stationName = getStationName(template.stationId),
 			stationId = template.stationId,
 			relatedPlayerId = relatedPlayer and relatedPlayer.UserId or nil,
+			relatedPlayerName = relatedPlayer and relatedPlayer.DisplayName or nil,
 			forged = forged,
 			visibilityRules = "Discoverable by any active player",
 			text = buildText(template, incident, relatedPlayer, forged),
@@ -97,6 +108,7 @@ function EvidenceService:InspectNext(player, stationId)
 		type = "No New Evidence",
 		reliabilityClass = "None",
 		sourceLocation = stationId or "Prototype Map",
+		stationName = getStationName(stationId),
 		text = "No new clues found. Use what you have in court.",
 	}
 end
@@ -117,8 +129,10 @@ function EvidenceService:ForgeEvidence(player, activePlayers, incident)
 		type = "Fake Document",
 		reliabilityClass = "Forgable",
 		sourceLocation = "evidence_printer",
+		stationName = getStationName("evidence_printer"),
 		stationId = "evidence_printer",
 		relatedPlayerId = target and target.UserId or nil,
+		relatedPlayerName = target and target.DisplayName or nil,
 		forged = true,
 		forgedByUserId = player.UserId,
 		visibilityRules = "Discoverable by any active player",

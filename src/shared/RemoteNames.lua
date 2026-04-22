@@ -5,5 +5,6 @@ return {
 	{ name = "ActionReceipt", className = "RemoteEvent" },
 	{ name = "VoteReceipt", className = "RemoteEvent" },
 	{ name = "SubmitVote", className = "RemoteEvent" },
+	{ name = "SubmitDebateAction", className = "RemoteEvent" },
 	{ name = "RequestClue", className = "RemoteFunction" },
 }

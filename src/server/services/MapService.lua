@@ -2,6 +2,7 @@ local Workspace = game:GetService("Workspace")
 
 local MapService = {
 	root = nil,
+	incidentFolder = nil,
 	spawns = {
 		Lobby = {},
 		Map = {},
@@ -25,6 +26,35 @@ local function createPart(parent, name, size, cframe, color, transparency)
 	part.BottomSurface = Enum.SurfaceType.Smooth
 	part.Parent = parent
 	return part
+end
+
+local function createWall(parent, name, size, cframe)
+	return createPart(parent, name, size, cframe, Color3.fromRGB(38, 40, 46))
+end
+
+local function createGlass(parent, name, size, cframe)
+	local part = createPart(parent, name, size, cframe, Color3.fromRGB(135, 215, 255), 0.55)
+	part.Material = Enum.Material.Glass
+	part.CanCollide = false
+	return part
+end
+
+local function createSeat(parent, name, cframe)
+	local base = createPart(
+		parent,
+		`${name}Base`,
+		Vector3.new(4, 0.6, 3),
+		cframe,
+		Color3.fromRGB(68, 46, 40)
+	)
+	local back = createPart(
+		parent,
+		`${name}Back`,
+		Vector3.new(4, 3, 0.5),
+		cframe * CFrame.new(0, 1.2, 1.25),
+		Color3.fromRGB(78, 52, 45)
+	)
+	return base, back
 end
 
 local function addLabel(parent, text)
@@ -75,10 +105,18 @@ function MapService:Build()
 		existing:Destroy()
 	end
 
+	local defaultSpawn = Workspace:FindFirstChild("SpawnLocation")
+	if defaultSpawn and defaultSpawn:IsA("SpawnLocation") then
+		defaultSpawn:Destroy()
+	end
+
 	local root = Instance.new("Folder")
 	root.Name = "BrainrotCourtroomMap"
 	root.Parent = Workspace
 	self.root = root
+	self.incidentFolder = Instance.new("Folder")
+	self.incidentFolder.Name = "IncidentEffects"
+	self.incidentFolder.Parent = root
 	self.spawns = {
 		Lobby = {},
 		Map = {},
@@ -118,10 +156,18 @@ function MapService:BuildLobby(root)
 	)
 	addLabel(sign, "LOBBY")
 
+	createWall(root, "LobbyBackWall", Vector3.new(38, 8, 1), CFrame.new(-68, 4, 15))
+	createWall(root, "LobbyLeftWall", Vector3.new(1, 8, 30), CFrame.new(-86, 4, 0))
+	createWall(root, "LobbyRightWall", Vector3.new(1, 8, 30), CFrame.new(-50, 4, 0))
+	createGlass(root, "LobbyWindow", Vector3.new(16, 5, 0.5), CFrame.new(-68, 4, 14.2))
+
 	for index = 1, 8 do
 		local row = math.floor((index - 1) / 4)
 		local column = (index - 1) % 4
-		self:AddSpawn("Lobby", CFrame.new(-76 + column * 5, 3, -4 + row * 8))
+		self:AddSpawn(
+			"Lobby",
+			CFrame.lookAt(Vector3.new(-76 + column * 5, 3, -4 + row * 8), Vector3.new(-68, 3, 0))
+		)
 	end
 end
 
@@ -174,6 +220,7 @@ function MapService:BuildInvestigation(root)
 			room.color
 		)
 		addLabel(floor, room.label)
+		self:BuildRoomWalls(root, room.name, room.position)
 	end
 
 	createPart(
@@ -194,7 +241,10 @@ function MapService:BuildInvestigation(root)
 	for index = 1, 14 do
 		local row = math.floor((index - 1) / 7)
 		local column = (index - 1) % 7
-		self:AddSpawn("Map", CFrame.new(-38 + column * 8, 3, -5 + row * 10))
+		self:AddSpawn(
+			"Map",
+			CFrame.lookAt(Vector3.new(-38 + column * 8, 3, -5 + row * 10), Vector3.new(10, 3, 0))
+		)
 	end
 
 	self:BuildClueStation(
@@ -267,6 +317,51 @@ function MapService:BuildInvestigation(root)
 	)
 end
 
+function MapService:BuildRoomWalls(root, roomName, position)
+	local y = 4
+	local doorZ = position.Z > 0 and position.Z - 12.5 or position.Z + 12.5
+	local solidZ = position.Z > 0 and position.Z + 12.5 or position.Z - 12.5
+	local windowZOffset = position.Z > 0 and 0.4 or -0.4
+
+	createWall(
+		root,
+		`${roomName}SolidWall`,
+		Vector3.new(28, 8, 1),
+		CFrame.new(position.X, y, solidZ)
+	)
+	createWall(
+		root,
+		`${roomName}LeftWall`,
+		Vector3.new(1, 8, 24),
+		CFrame.new(position.X - 14.5, y, position.Z)
+	)
+	createWall(
+		root,
+		`${roomName}RightWall`,
+		Vector3.new(1, 8, 24),
+		CFrame.new(position.X + 14.5, y, position.Z)
+	)
+
+	createWall(
+		root,
+		`${roomName}DoorLeftWall`,
+		Vector3.new(9, 8, 1),
+		CFrame.new(position.X - 9.5, y, doorZ)
+	)
+	createWall(
+		root,
+		`${roomName}DoorRightWall`,
+		Vector3.new(9, 8, 1),
+		CFrame.new(position.X + 9.5, y, doorZ)
+	)
+	createGlass(
+		root,
+		`${roomName}SightlineWindow`,
+		Vector3.new(6, 4, 0.5),
+		CFrame.new(position.X, y + 0.5, doorZ + windowZOffset)
+	)
+end
+
 function MapService:BuildClueStation(root, stationId, labelText, cframe, color)
 	local station = createPart(root, stationId, Vector3.new(5, 4, 4), cframe, color)
 	addLabel(station, labelText)
@@ -300,6 +395,11 @@ function MapService:BuildCourt(root)
 	)
 	addLabel(bench, "COURTROOM")
 
+	createWall(root, "CourtBackWall", Vector3.new(58, 9, 1), CFrame.new(70, 4.5, -22.5))
+	createWall(root, "CourtLeftWall", Vector3.new(1, 9, 44), CFrame.new(42.5, 4.5, 0))
+	createWall(root, "CourtRightWall", Vector3.new(1, 9, 44), CFrame.new(97.5, 4.5, 0))
+	createGlass(root, "CourtPublicWindow", Vector3.new(22, 5, 0.5), CFrame.new(70, 4.5, 22.2))
+
 	createPart(
 		root,
 		"AccusedPodium",
@@ -327,7 +427,81 @@ function MapService:BuildCourt(root)
 			CFrame.new(x, 0.25, z),
 			Color3.fromRGB(255, 204, 64)
 		)
-		self:AddSpawn("Court", CFrame.new(x, 3, z))
+		createSeat(root, `CourtSeat{index}`, CFrame.new(x, 0.8, z + 1.3))
+		self:AddSpawn("Court", CFrame.lookAt(Vector3.new(x, 3, z), Vector3.new(70, 3, -18)))
+	end
+end
+
+function MapService:ClearIncidentEffects()
+	if self.incidentFolder then
+		self.incidentFolder:ClearAllChildren()
+	end
+end
+
+function MapService:ShowIncident(incident)
+	self:ClearIncidentEffects()
+	if not incident or not self.incidentFolder then
+		return
+	end
+
+	if incident.id == "screaming_head" then
+		local head = createPart(
+			self.incidentFolder,
+			"ScreamingHead",
+			Vector3.new(10, 10, 10),
+			CFrame.new(10, 7, 0),
+			Color3.fromRGB(255, 224, 170)
+		)
+		head.Shape = Enum.PartType.Ball
+		addLabel(head, "AAAAAAAA")
+	elseif incident.id == "confetti_inferno" then
+		for index = 1, 18 do
+			createPart(
+				self.incidentFolder,
+				`ConfettiShard{index}`,
+				Vector3.new(1.5, 0.2, 0.7),
+				CFrame.new(-28 + index * 2.2, 2 + (index % 3), -4 + (index % 5) * 2),
+				Color3.fromHSV((index % 10) / 10, 0.75, 1)
+			)
+		end
+		createPart(
+			self.incidentFolder,
+			"FakeFire",
+			Vector3.new(9, 0.4, 9),
+			CFrame.new(10, 0.8, -32),
+			Color3.fromRGB(255, 95, 42)
+		)
+	elseif incident.id == "cursed_vault" then
+		for index = 1, 8 do
+			local orb = createPart(
+				self.incidentFolder,
+				`CursedObject{index}`,
+				Vector3.new(2.5, 2.5, 2.5),
+				CFrame.new(42 + index * 1.8, 2, -25 + (index % 4) * 4),
+				Color3.fromRGB(120, 255, 156)
+			)
+			orb.Shape = Enum.PartType.Ball
+		end
+	elseif incident.id == "evidence_printer" then
+		for index = 1, 12 do
+			createPart(
+				self.incidentFolder,
+				`NonsenseReport{index}`,
+				Vector3.new(2.2, 0.15, 3),
+				CFrame.new(7 + (index % 5) * 3, 1 + index * 0.08, -23 + math.floor(index / 5) * 3),
+				Color3.fromRGB(245, 245, 235)
+			)
+		end
+	elseif incident.id == "lights_out" then
+		local shadow = createPart(
+			self.incidentFolder,
+			"LightsOutFog",
+			Vector3.new(110, 0.3, 84),
+			CFrame.new(10, 1.2, 0),
+			Color3.fromRGB(15, 15, 18),
+			0.35
+		)
+		shadow.Material = Enum.Material.Neon
 	end
 end
 

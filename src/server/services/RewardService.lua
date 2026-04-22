@@ -1,8 +1,12 @@
 local Players = game:GetService("Players")
 
-local RewardService = {}
+local RewardService = {
+	ProfileService = nil,
+}
 
-function RewardService:Init()
+function RewardService:Init(profileService)
+	self.ProfileService = profileService
+
 	for _, player in ipairs(Players:GetPlayers()) do
 		self:SetupPlayer(player)
 	end
@@ -35,6 +39,18 @@ function RewardService:SetupPlayer(player)
 		wins.Value = 0
 		wins.Parent = leaderstats
 	end
+
+	local level = leaderstats:FindFirstChild("Level")
+	if not level then
+		level = Instance.new("IntValue")
+		level.Name = "Level"
+		level.Value = 1
+		level.Parent = leaderstats
+	end
+
+	if self.ProfileService then
+		self:ApplyProfileToLeaderstats(player)
+	end
 end
 
 function RewardService:AwardRound(players, roleService, winningSide)
@@ -43,18 +59,52 @@ function RewardService:AwardRound(players, roleService, winningSide)
 		local didWin = role and role.alignment == winningSide
 		local leaderstats = player:FindFirstChild("leaderstats")
 
+		local currencyAward = didWin and 35 or 10
+
+		if self.ProfileService then
+			self.ProfileService:ApplyRoundReward(player, role, didWin, currencyAward)
+		end
+
 		if leaderstats then
 			local currency = leaderstats:FindFirstChild("BrainBucks")
 			local wins = leaderstats:FindFirstChild("Wins")
+			local level = leaderstats:FindFirstChild("Level")
+			local profile = self.ProfileService and self.ProfileService:Get(player) or nil
 
 			if currency then
-				currency.Value += didWin and 35 or 10
+				currency.Value = profile and profile.currency or currency.Value + currencyAward
 			end
 
 			if wins and didWin then
-				wins.Value += 1
+				wins.Value = profile and profile.wins or wins.Value + 1
+			end
+
+			if level and profile then
+				level.Value = profile.level
 			end
 		end
+	end
+end
+
+function RewardService:ApplyProfileToLeaderstats(player)
+	local leaderstats = player:FindFirstChild("leaderstats")
+	local profile = self.ProfileService:Get(player)
+	if not leaderstats or not profile then
+		return
+	end
+
+	local currency = leaderstats:FindFirstChild("BrainBucks")
+	local wins = leaderstats:FindFirstChild("Wins")
+	local level = leaderstats:FindFirstChild("Level")
+
+	if currency then
+		currency.Value = profile.currency
+	end
+	if wins then
+		wins.Value = profile.wins
+	end
+	if level then
+		level.Value = profile.level
 	end
 end
 

@@ -18,6 +18,8 @@ local MatchService = {
 	skipPhase = false,
 	sabotageUsed = false,
 	forgeryUsedBy = {},
+	debateActions = {},
+	interruptUsedBy = {},
 }
 
 function MatchService:Init(services)
@@ -27,6 +29,7 @@ function MatchService:Init(services)
 	self.EvidenceService = services.EvidenceService
 	self.VoteService = services.VoteService
 	self.RewardService = services.RewardService
+	self.ProfileService = services.ProfileService
 	self.MapService = services.MapService
 
 	self.MapService:Init({
@@ -69,6 +72,10 @@ function MatchService:Init(services)
 			message = message,
 		})
 		self:BroadcastSnapshot()
+	end)
+
+	self.RemoteService:Get("SubmitDebateAction").OnServerEvent:Connect(function(player, payload)
+		self:HandleDebateAction(player, payload)
 	end)
 
 	Players.PlayerAdded:Connect(function()
@@ -143,7 +150,10 @@ function MatchService:WaitForPlayers()
 	self.verdict = nil
 	self.sabotageUsed = false
 	self.forgeryUsedBy = {}
+	self.debateActions = {}
+	self.interruptUsedBy = {}
 	self.MapService:TeleportPlayers(self:GetCurrentPlayers(), "Lobby")
+	self.MapService:ClearIncidentEffects()
 
 	while #self:GetCurrentPlayers() < self:GetRequiredPlayers() do
 		self.activePlayers = self:GetCurrentPlayers()
@@ -158,6 +168,8 @@ function MatchService:RunRound()
 	self.verdict = nil
 	self.sabotageUsed = false
 	self.forgeryUsedBy = {}
+	self.debateActions = {}
+	self.interruptUsedBy = {}
 
 	self:SetPhase(Config.Phases.RoleAssignment)
 	self.MapService:TeleportPlayers(self.activePlayers, "Lobby")
@@ -172,6 +184,7 @@ function MatchService:RunRound()
 
 	self.incident = self.IncidentService:Pick()
 	self.EvidenceService:Generate(self.roundId, self.incident, self.activePlayers, self.RoleService)
+	self.MapService:ShowIncident(self.incident)
 	self.MapService:TeleportPlayers(self.activePlayers, "Map")
 	self:RunPhaseTimer(Config.Phases.Incident)
 	self:RunPhaseTimer(Config.Phases.Investigation)
@@ -183,7 +196,9 @@ function MatchService:RunRound()
 
 	self.verdict = self.VoteService:Resolve(self.RoleService, self.activePlayers)
 	self.RewardService:AwardRound(self.activePlayers, self.RoleService, self.verdict.winningSide)
+	self:SaveProfiles(self.activePlayers)
 	self:RunPhaseTimer(Config.Phases.Reveal)
+	self.MapService:ClearIncidentEffects()
 end
 
 function MatchService:SetPhase(phase)
@@ -303,6 +318,85 @@ function MatchService:HandleForgePrompt(player)
 	self:SendAction(player, "Fake report planted in evidence printer.")
 end
 
+function MatchService:HandleDebateAction(player, payload)
+	if self.phase ~= Config.Phases.Debate then
+		self:SendAction(player, "Debate tools unlock during debate.")
+		return
+	end
+
+	if not self:IsActivePlayer(player) then
+		self:SendAction(player, "Only active players can debate.")
+		return
+	end
+
+	if type(payload) ~= "table" then
+		self:SendAction(player, "Debate action missing.")
+		return
+	end
+
+	local action = payload.action
+	if action ~= "Accuse" and action ~= "Present Evidence" and action ~= "Interrupt" then
+		self:SendAction(player, "Unknown debate action.")
+		return
+	end
+
+	if action == "Interrupt" then
+		if self.interruptUsedBy[player.UserId] then
+			self:SendAction(player, "Interrupt already used.")
+			return
+		end
+		self.interruptUsedBy[player.UserId] = true
+	end
+
+	local targetName = "the court"
+	local targetUserId = tonumber(payload.targetUserId)
+	for _, candidate in ipairs(self.activePlayers) do
+		if candidate.UserId == targetUserId then
+			targetName = candidate.DisplayName
+			break
+		end
+	end
+
+	local text
+	if action == "Present Evidence" and payload.evidenceSummary then
+		text =
+			`{player.DisplayName} presents evidence against {targetName}: {payload.evidenceSummary}`
+	elseif action == "Interrupt" then
+		text = `{player.DisplayName} interrupts {targetName}.`
+	else
+		text = `{player.DisplayName} accuses {targetName}.`
+	end
+
+	table.insert(self.debateActions, {
+		speakerUserId = player.UserId,
+		speakerName = player.DisplayName,
+		targetUserId = targetUserId,
+		targetName = targetName,
+		action = action,
+		text = text,
+		time = os.time(),
+	})
+
+	while #self.debateActions > 6 do
+		table.remove(self.debateActions, 1)
+	end
+
+	self.RemoteService:FireAllClients("ActionReceipt", {
+		message = text,
+	})
+	self:BroadcastSnapshot()
+end
+
+function MatchService:SaveProfiles(players)
+	if not self.ProfileService then
+		return
+	end
+
+	for _, player in ipairs(players) do
+		self.ProfileService:Save(player)
+	end
+end
+
 function MatchService:HandleDevCommand(player, message)
 	if not RunService:IsStudio() then
 		return
@@ -356,6 +450,7 @@ function MatchService:BuildSnapshot()
 		devPace = self.paceMode,
 		hudScanEnabled = Config.Dev.showHudScanFallback,
 		sabotageUsed = self.sabotageUsed,
+		debateActions = self.debateActions,
 		voteCounts = self.VoteService:GetCounts(),
 		verdict = self.verdict,
 		roleReveal = self.verdict and self.RoleService:GetRoleReveal(self.activePlayers) or nil,

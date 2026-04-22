@@ -30,6 +30,10 @@ function RoundController:Init()
 		remotes:WaitForChild("SubmitVote"):FireServer(targetUserId)
 	end
 
+	UIController.OnDebateAction = function(payload)
+		remotes:WaitForChild("SubmitDebateAction"):FireServer(payload)
+	end
+
 	remotes:WaitForChild("RoundSnapshot").OnClientEvent:Connect(function(snapshot)
 		UIController:RenderSnapshot(snapshot)
 	end)

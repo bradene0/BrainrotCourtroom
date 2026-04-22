@@ -9,8 +9,24 @@ local RewardService = require(Services:WaitForChild("RewardService"))
 local MapService = require(Services:WaitForChild("MapService"))
 local MatchService = require(Services:WaitForChild("MatchService"))
 
+local profileModule = Services:FindFirstChild("ProfileService")
+local ProfileService = profileModule and require(profileModule) or nil
+
 RemoteService:Init()
-RewardService:Init()
+MapService:Build()
+
+if ProfileService then
+	local ok, err = pcall(function()
+		ProfileService:Init()
+	end)
+
+	if not ok then
+		warn(`[BrainrotCourtroom] ProfileService disabled: {err}`)
+		ProfileService = nil
+	end
+end
+
+RewardService:Init(ProfileService)
 
 MatchService:Init({
 	RemoteService = RemoteService,
@@ -19,6 +35,7 @@ MatchService:Init({
 	EvidenceService = EvidenceService,
 	VoteService = VoteService,
 	RewardService = RewardService,
+	ProfileService = ProfileService,
 	MapService = MapService,
 })
 
