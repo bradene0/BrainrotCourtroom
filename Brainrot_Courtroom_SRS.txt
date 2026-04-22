@@ -1,0 +1,685 @@
+SRS.txt
+Product: Brainrot Courtroom
+Working Name: Brainrot Courtroom
+Document Version: 1.0
+Document Type: Software Requirements Specification
+Date: 2026-04-22
+
+1. OVERVIEW
+
+1.1 Product Summary
+Brainrot Courtroom is a fast-round Roblox social deception game where one or more hidden troublemakers cause absurd disasters, plant misleading evidence, and try to avoid conviction while the rest of the lobby investigates, debates, and votes.
+
+The game combines:
+- short social deduction rounds
+- absurd meme-style presentation
+- fake and incomplete evidence
+- high player interaction
+- repeatable rounds with fast resets
+- cosmetic progression and unlocks
+
+The core fantasy is:
+Something ridiculous happened. Everyone is panicking. Figure out who caused it before the round ends.
+
+1.2 Product Type
+Multiplayer Roblox experience.
+
+1.3 Vision
+Build a highly replayable social deception game with low onboarding friction, strong clip potential, and a chaotic courtroom identity that feels instantly watchable.
+
+1.4 Core Differentiator
+Unlike a traditional deduction game focused on realism, Brainrot Courtroom emphasizes absurd disasters, questionable evidence, false accusations, and comedic courtroom presentation while preserving a clear and competitive round structure.
+
+2. PROBLEM STATEMENT
+
+Many Roblox social games struggle with one or more of the following:
+- rounds take too long to start
+- roles are confusing
+- players get bored if they die or are removed early
+- social deduction games feel too serious or too slow
+- meme games are funny once but lack replayable structure
+- party games are hard to spectate or understand quickly
+
+Players want:
+- a game that is easy to understand in under a minute
+- fast, dramatic rounds
+- funny accusations and betrayals
+- enough structure for skill and replayability
+- a strong group-play experience
+
+Brainrot Courtroom solves this by combining a simple social deception loop with absurd incidents, accessible evidence systems, and courtroom-style debate and voting.
+
+3. GOALS
+
+3.1 Primary Goals
+- Create a highly replayable short-session multiplayer game
+- Make the core loop understandable in under 60 seconds
+- Encourage social interaction, accusation, bluffing, and baiting
+- Generate funny and shareable moments naturally
+- Support both public lobbies and friend-group play
+
+3.2 Secondary Goals
+- Provide strong cosmetic and progression incentives
+- Make spectating and watching a round entertaining
+- Enable quick live-ops additions through new disasters, modifiers, and evidence types
+- Keep content scope manageable for a small development team
+
+3.3 Non-Goals
+- realistic legal simulation
+- deep narrative progression
+- realistic detective mechanics
+- large open-world exploration
+- complicated combat systems
+- heavy inventory management
+
+4. TARGET USERS
+
+4.1 Primary Users
+A. Casual Roblox Players
+Players who want quick, funny, social multiplayer rounds.
+
+B. Friend Groups
+Small and medium groups looking for a party game with betrayal and voice/text chaos.
+
+C. Content-Friendly Players
+Players drawn to games that create clip-worthy reactions, accusations, and dramatic reveals.
+
+4.2 Secondary Users
+- streamers and short-form creators
+- younger audiences who enjoy meme-chaos presentation
+- players who like deduction games but want less seriousness
+
+5. GAME PILLARS
+
+5.1 Easy to Enter
+The premise and controls should make sense almost immediately.
+
+5.2 Social Chaos
+The best moments should come from accusation, bluffing, and panic.
+
+5.3 Fast Rounds
+A player should be able to finish multiple full rounds in a short session.
+
+5.4 Funny but Structured
+The game should feel absurd, but the rules must still be fair enough to sustain competition.
+
+5.5 Spectator Value
+Even players not actively controlling the outcome should still be entertained by reveals, debates, and reactions.
+
+6. CORE GAME LOOP
+
+6.1 High-Level Loop
+1. Players join lobby
+2. Roles are assigned secretly
+3. A disaster occurs or is triggered
+4. Players gather clues, react, and discuss
+5. Court session begins
+6. Players accuse and defend
+7. Vote occurs
+8. Verdict is revealed
+9. Winning side is rewarded
+10. Round resets with new roles and modifiers
+
+6.2 Session Structure
+- lobby and matchmaking
+- repeated short rounds
+- cosmetic and progression rewards between rounds
+
+7. ROUND STRUCTURE
+
+7.1 Phase 1: Role Assignment
+Each player receives a hidden role.
+
+Example roles:
+- Saboteur
+- Civilian
+- Witness
+- Chaos Lawyer
+- Forger
+- Judge Modifier role in special modes
+
+7.2 Phase 2: Incident
+A ridiculous event occurs.
+
+Examples:
+- giant screaming head falls from sky
+- lunch room explodes in confetti and fire
+- vault opens and cursed objects spill out
+- giant fake evidence printer spawns nonsense reports
+- all lights cut out for 10 seconds
+- floor becomes slippery while one room locks
+
+The incident creates the reason for the trial.
+
+7.3 Phase 3: Investigation
+Players move around a compact map, inspect clue points, observe behavior, and interact with witnesses or evidence systems.
+
+7.4 Phase 4: Courtroom Debate
+All players are moved to a courtroom or debate scene.
+Players can:
+- accuse others
+- defend themselves
+- present evidence
+- interrupt through limited systems
+- bait reactions
+
+7.5 Phase 5: Vote
+Players vote on who they believe caused the event.
+Depending on the mode, they may vote:
+- one suspect
+- multiple suspects
+- guilty or not guilty
+- whether to trust a witness
+
+7.6 Phase 6: Reveal and Rewards
+The true role alignment is revealed.
+Winning side gets rewards.
+Funny recap text or highlight moments are shown.
+
+8. ROLES
+
+8.1 Civilian
+Goal:
+Identify and convict the correct saboteur or sabotage team.
+
+Abilities:
+- inspect evidence
+- discuss and vote
+- use role-neutral interactions
+
+8.2 Saboteur
+Goal:
+Cause the disaster and avoid conviction.
+
+Abilities:
+- trigger or influence incidents
+- manipulate evidence in limited ways
+- lie during debate
+- exploit panic and confusion
+
+8.3 Witness
+Goal:
+Help civilians by receiving partial but imperfect information.
+
+Abilities:
+- receive one clue that is useful but incomplete
+- may be wrong, ambiguous, or manipulable
+
+8.4 Forger
+Goal:
+Assist deception by creating or altering one piece of evidence.
+
+Abilities:
+- plant misleading clue
+- generate fake report
+- frame another player under limited rules
+
+8.5 Chaos Lawyer
+Goal:
+Create confusion and disrupt certainty.
+Can be independent in some modes or aligned to saboteurs in others.
+
+Abilities:
+- add doubt
+- distort debate flow
+- earn rewards for causing wrong conviction or split vote, depending on rules
+
+8.6 Special Event Roles
+Future updates may add:
+- Judge
+- Bailiff
+- Double Agent
+- Silent Witness
+- Janitor
+- Meme Oracle
+
+9. MAP DESIGN REQUIREMENTS
+
+9.1 MVP Map Goals
+- compact enough for fast investigation
+- easy to learn
+- multiple sightline choke points
+- at least one hidden or isolated space
+- easy transition into courtroom
+
+9.2 MVP Map Theme Options
+- cursed school
+- bizarre office
+- meme courtroom complex
+- disaster lab
+- chaotic shopping center
+
+9.3 Map Requirements
+- 6 to 14 player support
+- clear clue points
+- obvious player routes
+- minimal downtime between spaces
+- strong visual read for spectators
+
+10. EVIDENCE SYSTEM
+
+10.1 Design Philosophy
+Evidence should be helpful but never perfectly decisive in every round.
+
+10.2 Evidence Types
+- witness statements
+- camera snapshots
+- item traces
+- room access logs
+- audio clues
+- fake documents
+- environmental anomalies
+- partial timeline fragments
+
+10.3 Evidence Rules
+- some clues are reliable
+- some are ambiguous
+- some can be forged
+- no single clue should guarantee the answer every round
+- evidence must create discussion, not replace it
+
+10.4 MVP Evidence
+The MVP should include:
+- 3 reliable clue types
+- 2 ambiguous clue types
+- 1 forgable clue type
+
+11. GAME MODES
+
+11.1 Core Mode
+One saboteur, one incident, standard courtroom vote.
+
+11.2 Chaos Mode
+More fake evidence, faster rounds, more absurd modifiers.
+
+11.3 Team Sabotage Mode
+Two hidden saboteurs coordinate.
+
+11.4 Hardcore Mode
+Reduced evidence clarity, higher penalties for wrong conviction.
+
+11.5 Limited-Time Modes
+Seasonal or event-based rule changes.
+
+12. FUNCTIONAL REQUIREMENTS
+
+12.1 Lobby and Match Flow
+The system shall:
+- allow players to join a waiting lobby
+- begin rounds when minimum player count is met
+- assign roles secretly
+- return players to post-round state cleanly
+- support repeat rounds without leaving server
+
+12.2 Role Assignment
+The system shall:
+- assign roles fairly based on lobby size
+- conceal roles from unauthorized players
+- scale role composition with player count
+- support special-role toggles for future modes
+
+12.3 Incident System
+The system shall:
+- trigger a round-start incident
+- generate context for investigation
+- support multiple incident templates
+- allow certain roles to influence incident outcomes when applicable
+
+12.4 Investigation System
+The system shall:
+- let players move through the map
+- surface clue interactables
+- track who interacted with certain systems when needed
+- reveal clues according to role permissions and round logic
+
+12.5 Debate and Court System
+The system shall:
+- transition players into a courtroom or debate scene
+- display suspect lineup or player identifiers clearly
+- allow accusation and defense messaging
+- support timed speaking or text windows in structured mode
+- support voting at the end of the debate phase
+
+12.6 Voting System
+The system shall:
+- allow each eligible player to cast a vote
+- prevent duplicate vote submissions
+- resolve ties using defined game rules
+- reveal results clearly
+- support mode-specific vote logic later
+
+12.7 Reveal System
+The system shall:
+- reveal role alignment after verdict
+- display whether the correct player was convicted
+- declare winning side
+- distribute round rewards accordingly
+
+12.8 Rewards and Progression
+The system shall:
+- reward participation
+- reward winning alignment
+- reward streaks or role mastery later
+- unlock cosmetics, titles, emotes, or courtroom themes
+
+13. NON-FUNCTIONAL REQUIREMENTS
+
+13.1 Performance
+- rounds should start reliably on typical Roblox-compatible devices
+- map complexity should remain appropriate for mobile and low-end users
+- debate and voting transitions should be low-latency and readable
+
+13.2 Reliability
+- role assignment must remain secret and accurate
+- vote outcomes must be deterministic and verifiable by server logic
+- round reset must not leak prior-round state
+
+13.3 Usability
+- first-time players should understand the objective within one round
+- role instructions must be short and clear
+- evidence UI must be readable and quick to parse
+
+13.4 Safety and Moderation
+- communication systems should account for Roblox moderation constraints
+- quick chat or structured accusation prompts should exist if free chat is limited
+- grief opportunities should be controlled where possible
+
+14. UX REQUIREMENTS
+
+14.1 New Player Onboarding
+The game shall:
+- show a short tutorial panel before or during the first round
+- explain role secrecy, evidence, accusation, and voting
+- avoid long mandatory tutorials
+
+14.2 HUD Requirements
+The HUD shall show:
+- round phase
+- time remaining
+- current objective
+- role-specific guidance
+- evidence count or available clue actions
+- vote prompt during courtroom phase
+
+14.3 Spectator Experience
+Eliminated or inactive players shall still be able to:
+- watch debates
+- watch reveals
+- see funny recap cards
+- remain engaged without influencing active play unfairly
+
+15. CONTENT REQUIREMENTS
+
+15.1 MVP Content
+- 1 map
+- 5 to 8 incidents
+- 4 core roles
+- 6 clue templates
+- 20 to 40 cosmetics
+- 1 courtroom scene
+- 1 progression path
+
+15.2 Live-Ops Content
+Future content can include:
+- new maps
+- new role combinations
+- new incidents
+- seasonal evidence themes
+- event modifiers
+- new courtroom skins
+- limited cosmetics
+
+16. MONETIZATION STRATEGY
+
+16.1 Design Principles
+Monetization should:
+- not decide guilt or innocence directly
+- not create pay-to-win role advantages
+- prioritize cosmetics, expression, and convenience
+- avoid predatory randomization patterns
+
+16.2 Monetization Options
+- cosmetic outfits
+- emotes
+- courtroom podium skins
+- banner/title customization
+- premium victory effects
+- battle pass or season pass
+- VIP private server perks
+- extra role-variant cosmetics, not stronger roles
+
+16.3 Monetization Non-Goals
+- no paid evidence advantages
+- no paid vote multipliers
+- no role purchase that guarantees sabotage power in competitive matchmaking
+
+17. TECHNICAL ARCHITECTURE
+
+17.1 High-Level Systems
+- MatchService
+- RoleService
+- IncidentService
+- EvidenceService
+- DebateService
+- VoteService
+- RewardService
+- CosmeticService
+- UIController
+- DataStore layer
+- Analytics layer
+
+17.2 Network Model
+Server-authoritative logic should control:
+- role assignment
+- incident generation
+- clue validity
+- voting
+- reveal resolution
+- reward distribution
+
+Clients should primarily handle:
+- presentation
+- movement input
+- local effects
+- UI interaction
+
+17.3 Persistence
+The game should persist:
+- currency
+- cosmetic ownership
+- player level or reputation
+- selected loadout
+- basic stats
+
+18. DATA MODELS
+
+18.1 PlayerProfile
+Fields:
+- user_id
+- display_name
+- currency_balance
+- owned_cosmetics
+- selected_cosmetics
+- level
+- games_played
+- wins_by_role_type
+- tutorial_completed
+
+18.2 RoundState
+Fields:
+- round_id
+- map_id
+- incident_id
+- phase
+- active_players
+- role_assignments
+- clue_states
+- vote_records
+- verdict
+- winning_side
+
+18.3 EvidenceRecord
+Fields:
+- evidence_id
+- type
+- reliability_class
+- source_location
+- related_player_id if applicable
+- forged_flag
+- visibility_rules
+
+19. ANALYTICS REQUIREMENTS
+
+19.1 Core Metrics
+Track:
+- session length
+- rounds per session
+- retention
+- role win rates
+- vote accuracy
+- quit rate by phase
+- first-round completion rate
+- conversion to cosmetic purchases
+
+19.2 Balance Metrics
+Track:
+- saboteur win rate
+- civilian win rate
+- frequency of wrong conviction
+- clue interaction frequency
+- tie vote frequency
+- role popularity and dodge behavior if applicable
+
+20. ACCEPTANCE CRITERIA
+
+20.1 MVP Round Flow
+- a full round can start, progress through all phases, and end cleanly
+- players receive hidden roles correctly
+- at least one incident occurs and creates an investigation context
+- debate and voting happen reliably
+- reveal correctly identifies the winning side
+
+20.2 Evidence
+- players can find and interpret at least several clue types
+- evidence influences discussion without hard-solving every round
+- at least one evidence type can be misleading or forged
+
+20.3 Replayability
+- players can complete multiple rounds in a session without excessive downtime
+- different role assignments and incidents meaningfully change round feel
+
+21. BALANCE TARGETS
+
+21.1 Round Length
+Target average:
+- 5 to 8 minutes per round
+
+21.2 Lobby Size
+Target:
+- 6 to 12 players ideal
+- support 4 player minimum with simplified rules if needed
+- support up to 14 later if performance and balance allow
+
+21.3 Role Balance
+Early target:
+- civilian side win rate near 50 to 60 percent
+- saboteur side win rate near 40 to 50 percent
+Exact balance will be adjusted through live data.
+
+22. DEVELOPMENT PHASES
+
+22.1 Phase 1: Prototype
+- one map graybox
+- one saboteur role
+- one civilian role
+- 2 to 3 incidents
+- simple clues
+- basic courtroom vote
+- no progression beyond placeholder rewards
+
+22.2 Phase 2: MVP
+- polished single map
+- multiple clue types
+- witness and forger roles
+- progression and cosmetics
+- onboarding
+- analytics
+- cleaner reveal flow
+
+22.3 Phase 3: Live Game
+- multiple maps
+- new roles
+- seasonal content
+- monetization polish
+- private server improvements
+- social features
+
+23. RISKS
+
+23.1 Design Risks
+- rounds may feel repetitive if clue variety is too low
+- pure chaos may overpower fair deduction
+- social games can die fast if lobbies feel empty
+
+23.2 Technical Risks
+- role secrecy leaks or vote bugs would damage trust immediately
+- too much map complexity may hurt performance
+- moderation constraints may reduce freeform debate quality
+
+23.3 Product Risks
+- meme branding may attract attention but not retention
+- a younger audience may struggle with deduction depth if onboarding is weak
+- the game may need enough players to feel alive
+
+24. MITIGATIONS
+
+- keep first version simple and readable
+- bias toward fair structure, then layer chaos on top
+- use clear phases and timers
+- build strong quick chat or accusation UI if needed
+- add bot fill or minimum-player fallback modes later if required
+- ship content updates regularly to maintain novelty
+
+25. SUCCESS METRICS
+
+25.1 Early Success
+- high first-round completion
+- strong repeat rounds per session
+- clear evidence of friend-group replayability
+- players understanding the premise without external explanation
+
+25.2 Medium-Term Success
+- increasing retention
+- strong clip and share potential
+- healthy cosmetic conversion without pay-to-win complaints
+- growing direct traffic from creator content or social posting
+
+26. RECOMMENDED MVP CUT
+
+The leanest strong MVP is:
+- one compact map
+- one saboteur
+- civilians
+- witness
+- forger
+- 5 incidents
+- 6 clue types
+- one courtroom debate phase
+- one vote system
+- round rewards
+- basic cosmetics
+- short onboarding
+
+That is enough to prove the thesis:
+a meme-chaos courtroom game can be funny, fast, and replayable if the deduction loop is clear.
+
+27. POSITIONING
+
+Primary positioning line:
+Accuse, defend, and survive the dumbest trial of your life.
+
+Alternative positioning line:
+Someone caused the disaster. Good luck proving it.
+
+One-sentence pitch:
+Brainrot Courtroom is a fast-round Roblox social deception game where absurd disasters, suspicious clues, and chaotic trials turn every lobby into a yelling match.
