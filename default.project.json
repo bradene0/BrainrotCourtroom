@@ -1,0 +1,26 @@
+{
+  "name": "BrainrotCourtroom",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "BrainrotCourtroom": {
+        "$className": "Folder",
+        "Shared": {
+          "$path": "src/shared"
+        }
+      }
+    },
+    "ServerScriptService": {
+      "BrainrotCourtroom": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "BrainrotCourtroom": {
+          "$path": "src/client"
+        }
+      }
+    }
+  }
+}
